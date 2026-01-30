@@ -44,6 +44,8 @@
     "@types/node": "^20.17.19",
     "jsdom": "^27.1.0",
     "typescript": "~5.9.2",
-    "vitest": "^4.0.8"
+    "vitest": "^4.0.8",
+    "skeleton-css": "^2.0.4",
+    "sweetalert2": "^11.10.1"
   }
 }
