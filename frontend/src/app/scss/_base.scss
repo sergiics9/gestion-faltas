@@ -1,0 +1,111 @@
+@use 'variables' as *;
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: $font-main;
+  background: $color-khaki;
+  color: $color-linen;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-weight: 600;
+  color: $color-linen;
+}
+
+p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-sky {
+  color: $color-sky;
+}
+
+.text-muted {
+  color: $color-khaki;
+}
+
+.bg-sky {
+  background: $color-sky;
+  color: $color-black;
+}
+
+.bg-dark {
+  background: $color-black;
+}
+
+.bg-linen {
+  background-color: $color-linen;
+}
+
+.bg-khaki {
+  background-color: $color-khaki;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.page-content {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+.main-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $color-black;
+  color: $color-linen;
+}
+
+:focus-visible {
+  outline: 2px solid $color-sky;
+  outline-offset: 2px;
+}

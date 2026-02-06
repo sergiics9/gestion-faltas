@@ -1,0 +1,75 @@
+@use '../../../scss/variables' as *;
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: 100px;
+  background: $color-grey;
+  color: $color-linen;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  .nav-title {
+    margin: 0;
+    font-size: 1.45rem;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    color: $color-black;
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    button {
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      font-weight: 500;
+      cursor: pointer;
+      background: $color-grey;
+      color: $color-linen;
+      transition: all 0.18s ease;
+
+      &:hover {
+        background: lighten($color-grey, 6%);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+        background: darken($color-grey, 6%);
+      }
+
+      /* botón principal */
+      &.primary {
+        background: $color-linen;
+        color: $color-black;
+        font-weight: 600;
+
+        &:hover {
+          background: lighten($color-sky, 6%);
+        }
+
+        &:active {
+          background: darken($color-sky, 6%);
+        }
+      }
+
+      /* botón secundario claro */
+      &.ghost {
+        background: transparent;
+        border: 1px solid $color-khaki;
+        color: $color-linen;
+
+        &:hover {
+          border-color: $color-sky;
+          color: $color-sky;
+          background: rgba($color-sky, 0.08);
+        }
+      }
+    }
+  }
+}

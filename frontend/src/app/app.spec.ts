@@ -18,6 +18,7 @@ describe('App', () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontend');
+    // La app raíz solo renderiza el router-outlet (los títulos viven en layouts/vistas)
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
   });
 });

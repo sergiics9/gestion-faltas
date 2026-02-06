@@ -5,18 +5,22 @@ import { Roles } from '../../../types/roles';
   selector: 'app-navbar',
   imports: [],
   template: `
-    <nav>
-      <h1 class="nav-title">Gestión de faltas</h1>
+    <nav class="navbar">
+      <h1 class="nav-title">Logo</h1>
 
-      <nav>
+      <div class="nav-actions">
         @switch (role) {
           @case ('admin') {}
           @case ('centeradmin') {}
           @case ('teacher') {}
           @case ('guard') {}
-          @default {}
+          @default {
+            <button class="ghost">Hoy</button>
+            <button>Toda la semana</button>
+            <button class="primary">Todo el mes</button>
+          }
         }
-      </nav>
+      </div>
     </nav>
   `,
   styleUrl: './navbar.scss',

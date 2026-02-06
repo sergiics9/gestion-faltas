@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 
 @Injectable({
