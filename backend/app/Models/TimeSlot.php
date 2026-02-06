@@ -9,6 +9,8 @@ class TimeSlot extends Model
 {
     use HasFactory;
 
+    protected $table = 'timeslots';
+
     protected $fillable = [
         'center_id',
         'start_time',
