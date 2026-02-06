@@ -1,12 +1,14 @@
+import { Navbar } from './../navbar/navbar';
 import { Component } from '@angular/core';
-import { Roles } from '../../../types/roles';
 
 @Component({
   selector: 'app-header',
-  imports: [],
-  templateUrl: './header.html',
+  imports: [Navbar],
+  template: `
+    <header>
+      <app-navbar></app-navbar>
+    </header>
+  `,
   styleUrl: './header.scss',
 })
-export class Header {
-  readonly role!: Roles;
-}
+export class Header {}

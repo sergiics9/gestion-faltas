@@ -4,7 +4,7 @@ import Swal, { SweetAlertIcon, SweetAlertOptions } from 'sweetalert2';
 @Injectable({
   providedIn: 'root',
 })
-export class MessageService {
+export class Messages {
   show(
     message: string,
     title: MessageTitle,
