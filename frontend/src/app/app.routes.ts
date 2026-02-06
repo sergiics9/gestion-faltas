@@ -9,6 +9,7 @@ import { ProfesorFaltaForm } from './components/profesores/profesor-falta-form/p
 import { ProfesorHistorialFaltas } from './components/profesores/profesor-historial-faltas/profesor-historial-faltas';
 import { GuardiaHorario } from './components/guardias/guardia-horario/guardia-horario';
 import { GuardiaAsignacion } from './components/guardias/guardia-asignacion/guardia-asignacion';
+import { GuardiaPanel } from './components/guardias/guardia-panel/guardia-panel';
 import { AdminPanel } from './components/admin/admin-panel/admin-panel';
 import { AdminUsuarios } from './components/admin/admin-usuarios/admin-usuarios';
 import { AdminFaltas } from './components/admin/admin-faltas/admin-faltas';
@@ -33,13 +34,14 @@ export const routes: Routes = [
       { path: 'faltas/nueva', component: ProfesorFaltaForm },
       { path: 'faltas/historial', component: ProfesorHistorialFaltas },
 
+      { path: 'guardias/panel', component: GuardiaPanel },
       { path: 'guardias/horario', component: GuardiaHorario },
       { path: 'guardias/asignacion', component: GuardiaAsignacion },
 
       { path: 'admin', component: AdminPanel },
       { path: 'admin/usuarios', component: AdminUsuarios },
       { path: 'admin/faltas', component: AdminFaltas },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'guardias/panel', pathMatch: 'full' },
     ],
   },
 

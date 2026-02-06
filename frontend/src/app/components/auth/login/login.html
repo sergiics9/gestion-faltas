@@ -6,31 +6,28 @@
         <div class="card-body p-5">
           <h3 class="text-center mb-4 fw-bold title-text">Iniciar Sesión</h3>
 
-          <!-- < [formGroup]="loginForm" (ngSubmit)="onSubmit()"> -->
-          <form>
+          <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <div class="mb-3">
               <label for="username" class="form-label fw-semibold">Usuario</label>
-              <input type="text" class="form-control custom-input" id="username" placeholder="Ingresa tu usuario">
-              <!-- <input type="text" class="form-control custom-input" id="username" formControlName="username"
-                placeholder="Ingresa tu usuario"> -->
+              <input type="text" class="form-control custom-input" id="username" formControlName="username"
+                placeholder="Ingresa tu usuario">
 
-              <!-- @if (loginForm.controls.username.invalid && loginForm.controls.username.touched) { -->
+              @if (loginForm.controls.username.invalid && loginForm.controls.username.touched) {
               <div class="text-danger mt-1 small">
                 El usuario es obligatorio
               </div>
-              <!-- } -->
+              }
             </div>
 
             <div class="mb-3">
               <label for="password" class="form-label fw-semibold">Contraseña</label>
-              <input type="password" class="form-control custom-input" id="password" placeholder="••••••••">
-              <!-- <input type="password" class="form-control custom-input" id="password" formControlName="password"
-              placeholder="••••••••"> -->
-              <!-- @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) { -->
+              <input type="password" class="form-control custom-input" id="password" formControlName="password"
+                placeholder="••••••••">
+              @if (loginForm.controls.password.invalid && loginForm.controls.password.touched) {
               <div class="text-danger mt-1 small">
                 La contraseña es obligatoria
               </div>
-              <!-- } -->
+              }
             </div>
 
             <div class="d-grid gap-2 mt-4">
