@@ -45,14 +45,15 @@ export class AuthService {
         this.userSubject.next(res.user);
       }),
       map(() => ({ ok: true })),
-      catchError((err) => of({ ok: false, error: err.error?.message ?? 'Error de login' }))
+      catchError((err) => of({ ok: false, error: err.error?.message ?? 'Error de login' })),
     );
   }
 
   logout(): void {
-    this.http.post(`${API}/auth/logout`, {}).pipe(
-      catchError(() => of(null))
-    ).subscribe();
+    this.http
+      .post(`${API}/auth/logout`, {})
+      .pipe(catchError(() => of(null)))
+      .subscribe();
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     this.tokenSubject.next(null);
@@ -69,7 +70,7 @@ export class AuthService {
       catchError(() => {
         this.logout();
         return of(null);
-      })
+      }),
     );
   }
 

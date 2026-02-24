@@ -30,9 +30,13 @@
               }
             </div>
 
+            @if (error()) {
+            <div class="alert alert-danger py-2 mt-2">{{ error() }}</div>
+            }
+
             <div class="d-grid gap-2 mt-4">
-              <button type="submit" class="btn btn-primary custom-btn fw-bold">
-                Enviar
+              <button type="submit" class="btn btn-primary custom-btn fw-bold" [disabled]="loading()">
+                {{ loading() ? 'Entrando...' : 'Enviar' }}
               </button>
             </div>
 
