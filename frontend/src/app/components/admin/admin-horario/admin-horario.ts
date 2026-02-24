@@ -30,11 +30,10 @@ export class AdminHorario {
             this.loading.set(false);
             this.error.set(err?.error?.message ?? 'Error');
             return of([]);
-          })
-        )
-      )
+          }),
+        ),
+      ),
     ),
-    { initialValue: [] as ScheduleEntry[] }
+    { initialValue: [] as ScheduleEntry[] },
   );
-
 }

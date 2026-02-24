@@ -1,1 +1,42 @@
-<p>admin-faltas works!</p>
+<app-header></app-header>
+<section class="admin-faltas py-4">
+    <div class="container">
+        <h2 class="mb-4">Faltas</h2>
+        <a routerLink="/app/admin" class="btn btn-outline-secondary mb-3">Volver</a>
+
+        @if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+        }
+
+        @if (loading()) {
+        <div class="spinner-border"></div>
+        } @else {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Profesor</th>
+                        <th>Hora</th>
+                        <th>Nota</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (a of absences(); track a.id) {
+                    <tr>
+                        <td>{{ a.date }}</td>
+                        <td>{{ a.teacher }}</td>
+                        <td>{{ formatTime(a.start_time) }} - {{ formatTime(a.end_time) }}</td>
+                        <td>{{ a.note ?? '-' }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" (click)="delete(a.id)">Eliminar</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</section>
