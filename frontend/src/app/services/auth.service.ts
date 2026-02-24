@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, tap, catchError, of, map } from 'rxjs';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import type { Usuario, LoginRequest, LoginResponse } from '../interfaces/usuario';
-import { getStoredToken } from './auth.interceptor';
+import { getStoredToken } from '../interceptors/auth-interceptor';
 
 const TOKEN_KEY = 'auth_token';
 const USER_KEY = 'auth_user';
