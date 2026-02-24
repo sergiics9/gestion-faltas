@@ -1,1 +1,64 @@
 <app-header></app-header>
+<section class="profesor-falta-form py-4">
+    <div class="container">
+        <h2 class="mb-4">Registrar falta</h2>
+
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="fullDay" formControlName="fullDay" />
+                <label class="form-check-label" for="fullDay">Día completo</label>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="multipleDays" formControlName="multipleDays" />
+                <label class="form-check-label" for="multipleDays">Varios días</label>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="dateFrom" class="form-label">Fecha desde</label>
+                    <input type="date" class="form-control" id="dateFrom" formControlName="dateFrom" [min]="minDate" />
+                </div>
+                @if (form.get('multipleDays')?.value) {
+                <div class="col-md-6">
+                    <label for="dateTo" class="form-label">Fecha hasta</label>
+                    <input type="date" class="form-control" id="dateTo" formControlName="dateTo"
+                        [min]="form.get('dateFrom')?.value" />
+                </div>
+                }
+            </div>
+
+            @if (!form.get('fullDay')?.value && hasEntries()) {
+            <div class="mb-3">
+                <label class="form-label">Selecciona las horas que faltas</label>
+                <div class="d-flex flex-wrap gap-2">
+                    @for (e of entries(); track e.timeslot_id) {
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" [id]="'slot-' + e.timeslot_id"
+                            [checked]="isSelected(e.timeslot_id)" (change)="toggleSlot(e.timeslot_id)" />
+                        <label class="form-check-label" [for]="'slot-' + e.timeslot_id">
+                            {{ formatTime(e.start_time) }}-{{ formatTime(e.end_time) }} ({{ e.classroom }}, {{ e.subject
+                            }})
+                        </label>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <div class="mb-3">
+                <label for="note" class="form-label">Tarea o nota (opcional)</label>
+                <textarea class="form-control" id="note" formControlName="note" rows="2"
+                    placeholder="Ej: ejercicios página 45"></textarea>
+            </div>
+
+            @if (error()) {
+            <div class="alert alert-danger">{{ error() }}</div>
+            }
+
+            <button type="submit" class="btn btn-primary" [disabled]="loading()">
+                {{ loading() ? 'Enviando...' : 'Registrar falta' }}
+            </button>
+        </form>
+    </div>
+</section>
