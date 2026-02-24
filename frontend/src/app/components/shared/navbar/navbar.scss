@@ -1,4 +1,5 @@
 @use '../../../scss/variables' as *;
+@use 'sass:color';
 
 .navbar {
   display: flex;
@@ -34,13 +35,13 @@
       transition: all 0.18s ease;
 
       &:hover {
-        background: lighten($color-grey, 6%);
+        background: color.adjust($color-grey, $lightness: 6%);
         transform: translateY(-1px);
       }
 
       &:active {
         transform: translateY(0);
-        background: darken($color-grey, 6%);
+        background: color.adjust($color-grey, $lightness: -6%);
       }
 
       /* botón principal */
@@ -50,11 +51,11 @@
         font-weight: 600;
 
         &:hover {
-          background: lighten($color-sky, 6%);
+          background: color.adjust($color-grey, $lightness: 6%);
         }
 
         &:active {
-          background: darken($color-sky, 6%);
+          background: color.adjust($color-grey, $lightness: -6%);
         }
       }
 
