@@ -1,11 +1,6 @@
-$color-black: #07020d;
-$color-sky: #5db7de;
-$color-linen: #f1e9db;
-$color-khaki: #a39b8b;
-$color-grey: #716a5c;
-$font-main:
-  'Inter',
-  system-ui,
-  -apple-system,
-  BlinkMacSystemFont,
-  sans-serif;
+// Variables globales de la aplicación
+:root {
+  --app-primary: #0d6efd;
+  --app-header-bg: #1a365d;
+  --app-bg: #f8f9fa;
+}

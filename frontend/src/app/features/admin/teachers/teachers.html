@@ -1,0 +1,78 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h5 mb-0">Profesores y usuarios</h2>
+  <button type="button" class="btn btn-primary" (click)="openCreate()">Nuevo usuario</button>
+</div>
+
+@if (loading()) {
+  <p class="text-muted">Cargando...</p>
+} @else {
+  <table class="table table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Nombre</th>
+        <th>Usuario</th>
+        <th>Rol</th>
+        <th>Centro</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (u of list(); track u.id) {
+        <tr>
+          <td>{{ u.name }}</td>
+          <td>{{ u.username }}</td>
+          <td>{{ u.role }}</td>
+          <td>{{ u.center ?? '—' }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="openEdit(u)">Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(u)">Eliminar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+
+@if (modalOpen()) {
+  <div class="modal show d-block" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editId() ? 'Editar usuario' : 'Nuevo usuario' }}</h5>
+          <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Usuario (login)</label>
+            <input type="text" class="form-control" [ngModel]="form().username" (ngModelChange)="setForm({ username: $event })" [readonly]="!!editId()" />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Contraseña {{ editId() ? '(dejar en blanco para no cambiar)' : '' }}</label>
+            <input type="password" class="form-control" [ngModel]="form().password" (ngModelChange)="setForm({ password: $event })" />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" [ngModel]="form().name" (ngModelChange)="setForm({ name: $event })" />
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Rol</label>
+            <select class="form-select" [ngModel]="form().role" (ngModelChange)="setForm({ role: $event })">
+              @for (r of roles; track r) {
+                <option [value]="r">{{ r }}</option>
+              }
+            </select>
+          </div>
+          @if (error()) {
+            <div class="alert alert-danger py-2 small">{{ error() }}</div>
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving() || !form().username || !form().name">
+            {{ saving() ? 'Guardando...' : 'Guardar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
