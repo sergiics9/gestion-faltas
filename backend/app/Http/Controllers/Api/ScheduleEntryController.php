@@ -75,13 +75,14 @@ class ScheduleEntryController
             ->with(['timeslot','classroom','subject'])
             ->get();
 
-        $absentTimeslotIds = Absence::query()
+        $absencesByTimeslot = Absence::query()
             ->where('teacher_id', $teacher->id)
             ->whereDate('date', $date->toDateString())
-            ->pluck('timeslot_id')
-            ->all();
+            ->get()
+            ->keyBy('timeslot_id');
 
-        $rows = $entries->map(function ($e) use ($absentTimeslotIds) {
+        $rows = $entries->map(function ($e) use ($absencesByTimeslot) {
+            $absence = $absencesByTimeslot->get($e->timeslot_id);
             return [
                 'schedule_entry_id' => $e->id,
                 'timeslot_id' => $e->timeslot_id,
@@ -89,7 +90,9 @@ class ScheduleEntryController
                 'end_time' => $e->timeslot->end_time,
                 'classroom' => $e->classroom->name,
                 'subject' => $e->subject->name,
-                'is_absent' => in_array($e->timeslot_id, $absentTimeslotIds, true),
+                'is_absent' => $absence !== null,
+                'absence_id' => $absence?->id,
+                'absence_note' => $absence?->note,
             ];
         })->values();
 

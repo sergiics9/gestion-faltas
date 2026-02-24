@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\TimeSlotController;
 use App\Http\Controllers\Api\ClassroomController;
 use App\Http\Controllers\Api\SubjectController;
 use App\Http\Controllers\Api\ScheduleEntryController;
+use App\Http\Controllers\Api\UserController;
 
 Route::post('/v1/auth/login', [AuthController::class, 'login']);
 
@@ -23,9 +24,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('/v1/classrooms', ClassroomController::class);
     Route::apiResource('/v1/subjects', SubjectController::class);
     Route::apiResource('/v1/schedule-entries', ScheduleEntryController::class);
+    Route::apiResource('/v1/users', UserController::class);
 
     // Absences
     Route::post('/v1/absences', [AbsenceController::class, 'store']);
+    Route::delete('/v1/absences/{absence}', [AbsenceController::class, 'destroy']);
 
     // Guard (login required)
     Route::get('/v1/guard/today', [GuardController::class, 'today']);

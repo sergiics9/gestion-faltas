@@ -91,4 +91,17 @@ class AbsenceController
 
         return response()->json($absence, 201);
     }
+
+    public function destroy(Request $request, Absence $absence)
+    {
+        $auth = $request->user();
+        if ($auth->role === 'teacher' && $auth->id !== $absence->teacher_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+        if (in_array($auth->role, ['centeradmin', 'guard'], true) && $auth->center_id !== $absence->teacher->center_id) {
+            return response()->json(['message' => 'Forbidden'], 403);
+        }
+        $absence->delete();
+        return response()->noContent();
+    }
 }
