@@ -6,6 +6,7 @@ import { Subject, switchMap, tap, catchError, of, startWith } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
 import { AuthService } from '../../../services/auth.service';
 import { Header } from '../../shared/header/header';
+import { UserRole } from '../../../interfaces/usuario';
 
 @Component({
   selector: 'app-admin-usuarios',
@@ -59,8 +60,8 @@ export class AdminUsuarios {
     username: ['', Validators.required],
     password: ['', Validators.minLength(6)],
     name: ['', Validators.required],
-    role: ['teacher' as const, Validators.required],
-    center_id: [null as number | null],
+    role: this.fb.control<UserRole>('teacher', Validators.required),
+    center_id: this.fb.control<number | null>(null),
   });
 
   openCreate() {
