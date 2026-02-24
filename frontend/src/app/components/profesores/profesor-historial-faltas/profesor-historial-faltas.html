@@ -1,1 +1,36 @@
 <app-header></app-header>
+<section class="profesor-historial-faltas py-4">
+    <div class="container">
+        <h2 class="mb-4">Mis faltas</h2>
+        <a routerLink="/app/dashboard" class="btn btn-outline-secondary mb-3">Volver</a>
+
+        @if (error()) {
+        <div class="alert alert-danger">{{ error() }}</div>
+        }
+
+        @if (loading()) {
+        <div class="spinner-border"></div>
+        } @else {
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Hora</th>
+                        <th>Nota</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (a of absences(); track a.id) {
+                    <tr>
+                        <td>{{ a.date }}</td>
+                        <td>{{ formatTime(a.start_time) }} - {{ formatTime(a.end_time) }}</td>
+                        <td>{{ a.note ?? '-' }}</td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        }
+    </div>
+</section>
