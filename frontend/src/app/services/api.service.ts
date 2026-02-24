@@ -58,7 +58,9 @@ export class ApiService {
   getClassrooms(): Observable<Classroom[]> {
     return this.http.get<Classroom[]>(`${API}/classrooms`);
   }
-  createClassroom(data: Omit<Classroom, 'id' | 'created_at' | 'updated_at'>): Observable<Classroom> {
+  createClassroom(
+    data: Omit<Classroom, 'id' | 'created_at' | 'updated_at'>,
+  ): Observable<Classroom> {
     return this.http.post<Classroom>(`${API}/classrooms`, data);
   }
   updateClassroom(id: number, data: Partial<Classroom>): Observable<Classroom> {
@@ -89,7 +91,9 @@ export class ApiService {
   getScheduleEntry(id: number): Observable<ScheduleEntry> {
     return this.http.get<ScheduleEntry>(`${API}/schedule-entries/${id}`);
   }
-  createScheduleEntry(data: Omit<ScheduleEntry, 'id' | 'created_at' | 'updated_at'>): Observable<ScheduleEntry> {
+  createScheduleEntry(
+    data: Omit<ScheduleEntry, 'id' | 'created_at' | 'updated_at'>,
+  ): Observable<ScheduleEntry> {
     return this.http.post<ScheduleEntry>(`${API}/schedule-entries`, data);
   }
   updateScheduleEntry(id: number, data: Partial<ScheduleEntry>): Observable<ScheduleEntry> {
@@ -100,7 +104,10 @@ export class ApiService {
   }
 
   // Teacher schedule for a day
-  getTeacherScheduleDay(teacherId: number, date: string): Observable<{
+  getTeacherScheduleDay(
+    teacherId: number,
+    date: string,
+  ): Observable<{
     teacher: { id: number; name: string };
     date: string;
     day_of_week: number;
@@ -158,7 +165,9 @@ export class ApiService {
       }>
     >(`${API}/absences`);
   }
-  createAbsence(data: CreateAbsenceRequest): Observable<Absence | { message: string; created: number }> {
+  createAbsence(
+    data: CreateAbsenceRequest,
+  ): Observable<Absence | { message: string; created: number }> {
     return this.http.post<Absence | { message: string; created: number }>(`${API}/absences`, data);
   }
   deleteAbsence(id: number): Observable<void> {
@@ -169,9 +178,9 @@ export class ApiService {
   getUsers(): Observable<
     Array<{ id: number; username: string; name: string; role: string; center_id: number | null }>
   > {
-    return this.http.get<Array<{ id: number; username: string; name: string; role: string; center_id: number | null }>>(
-      `${API}/users`
-    );
+    return this.http.get<
+      Array<{ id: number; username: string; name: string; role: string; center_id: number | null }>
+    >(`${API}/users`);
   }
   createUser(data: {
     username: string;
@@ -179,7 +188,13 @@ export class ApiService {
     name: string;
     role: string;
     center_id?: number | null;
-  }): Observable<{ id: number; username: string; name: string; role: string; center_id: number | null }> {
+  }): Observable<{
+    id: number;
+    username: string;
+    name: string;
+    role: string;
+    center_id: number | null;
+  }> {
     return this.http.post<{
       id: number;
       username: string;
@@ -190,8 +205,20 @@ export class ApiService {
   }
   updateUser(
     id: number,
-    data: Partial<{ username: string; password: string; name: string; role: string; center_id: number | null }>
-  ): Observable<{ id: number; username: string; name: string; role: string; center_id: number | null }> {
+    data: Partial<{
+      username: string;
+      password: string;
+      name: string;
+      role: string;
+      center_id: number | null;
+    }>,
+  ): Observable<{
+    id: number;
+    username: string;
+    name: string;
+    role: string;
+    center_id: number | null;
+  }> {
     return this.http.put<{
       id: number;
       username: string;

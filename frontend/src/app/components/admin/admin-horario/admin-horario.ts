@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Subject, switchMap, tap, catchError, of, startWith } from 'rxjs';
 import { ApiService } from '../../../services/api.service';
 import { Header } from '../../shared/header/header';
-import type { ScheduleEntry, TimeSlot, Classroom, Subject } from '../../../interfaces/api';
+import { ScheduleEntry } from '../../../interfaces/api';
 
 @Component({
   selector: 'app-admin-horario',

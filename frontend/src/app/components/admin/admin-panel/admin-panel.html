@@ -1,1 +1,14 @@
-<p>admin-panel works!</p>
+<app-header></app-header>
+<section class="admin-panel py-4">
+    <div class="container">
+        <h2 class="mb-4">Panel de administración</h2>
+        <div class="d-flex flex-wrap gap-2">
+            <a routerLink="/app/admin/usuarios" class="btn btn-primary">Usuarios</a>
+            <a routerLink="/app/admin/faltas" class="btn btn-primary">Faltas</a>
+            <a routerLink="/app/admin/horario" class="btn btn-primary">Horario</a>
+            @if (auth.hasRole('admin')) {
+            <a routerLink="/app/admin/centros" class="btn btn-outline-primary">Centros (solo admin)</a>
+            }
+        </div>
+    </div>
+</section>
