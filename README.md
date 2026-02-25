@@ -11,7 +11,6 @@ Aplicación web para gestionar las faltas del profesorado del IES Pere Maria. Pe
 | **`backend/`**                  | API REST con **Laravel 12** (PHP), autenticación Sanctum, MySQL |
 | **`frontend/`**                 | SPA con **Angular 21**, Bootstrap                               |
 | **`docker/`**                   | Configuración de Nginx (HTTPS) y certificados                   |
-| **`presentacion/`**             | Presentación PowerPoint del proyecto y script para generarla    |
 | **`GUIA-DESPLIEGUE-DOCKER.md`** | Guía paso a paso para desplegar con Docker en Windows           |
 
 ---
