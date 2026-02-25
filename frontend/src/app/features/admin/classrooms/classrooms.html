@@ -1,0 +1,48 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h5 mb-0">Aulas</h2>
+  <button type="button" class="btn btn-primary" (click)="openCreate()">Nueva aula</button>
+</div>
+@if (loading()) { <p class="text-muted">Cargando...</p> } @else {
+  <table class="table table-bordered">
+    <thead class="table-light"><tr><th>Nombre</th><th></th></tr></thead>
+    <tbody>
+      @for (r of list(); track r.id) {
+        <tr>
+          <td>{{ r.name }}</td>
+          <td>
+            <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="openEdit(r)">Editar</button>
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(r)">Eliminar</button>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}
+@if (modalOpen()) {
+  <div class="modal show d-block" style="background: rgba(0,0,0,0.5);">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ editId() ? 'Editar aula' : 'Nueva aula' }}</h5>
+          <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label class="form-label">Centro</label>
+            <select class="form-select" [ngModel]="form().center_id" (ngModelChange)="setForm({ center_id: $event })">
+              @for (c of centers; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+            </select>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" [ngModel]="form().name" (ngModelChange)="setForm({ name: $event })" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+          <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving() || !form().name">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+}
