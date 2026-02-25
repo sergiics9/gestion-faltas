@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, signal, computed, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
@@ -32,7 +32,9 @@ interface ScheduleDayResponse {
   imports: [CommonModule, FormsModule],
   templateUrl: './teacher-dashboard.html',
 })
-export class TeacherDashboardComponent implements OnInit {
+export class TeacherDashboardComponent {
+  private http = inject(HttpClient);
+  public auth = inject(AuthService);
   current = signal<{ year: number; month: number }>({
     year: new Date().getFullYear(),
     month: new Date().getMonth() + 1,
@@ -81,12 +83,7 @@ export class TeacherDashboardComponent implements OnInit {
     return false;
   });
 
-  constructor(
-    public auth: AuthService,
-    private http: HttpClient,
-  ) {}
-
-  ngOnInit(): void {
+  constructor() {
     const today = new Date();
     const todayStr = today.toISOString().slice(0, 10);
     const dow = today.getDay();
@@ -114,7 +111,9 @@ export class TeacherDashboardComponent implements OnInit {
   }
 
   selectDate(dateStr: string): void {
-    const day = this.calendarDays().find((x) => x.dateStr === dateStr);
+    const day = this.calendarDays().find(
+      (x: { dateStr: string; isPast: boolean; isWeekend: boolean }) => x.dateStr === dateStr,
+    );
     if (day?.isPast) return;
     this.selectedDate.set(dateStr);
     this.pendingChecks.set({});
@@ -131,7 +130,7 @@ export class TeacherDashboardComponent implements OnInit {
         params: { date: dateStr },
       })
       .subscribe({
-        next: (res) => {
+        next: (res: ScheduleDayResponse) => {
           this.schedule.set(res);
           const init: Record<number, boolean> = {};
           res.entries.forEach((e) => (init[e.timeslot_id] = e.is_absent));
@@ -148,7 +147,7 @@ export class TeacherDashboardComponent implements OnInit {
   toggleAllDay(checked: boolean): void {
     const entries = this.entries();
     const next: Record<number, boolean> = {};
-    entries.forEach((e) => (next[e.timeslot_id] = checked));
+    entries.forEach((e: DayEntry) => (next[e.timeslot_id] = checked));
     this.pendingChecks.set(next);
   }
 
@@ -156,15 +155,15 @@ export class TeacherDashboardComponent implements OnInit {
     const entries = this.entries();
     if (entries.length === 0) return false;
     const checks = this.pendingChecks();
-    return entries.every((e) => !!checks[e.timeslot_id]);
+    return entries.every((e: DayEntry) => !!checks[e.timeslot_id]);
   }
 
   setCheck(timeslotId: number, checked: boolean): void {
-    this.pendingChecks.update((m) => ({ ...m, [timeslotId]: checked }));
+    this.pendingChecks.update((m: Record<number, boolean>) => ({ ...m, [timeslotId]: checked }));
   }
 
   setNote(timeslotId: number, note: string): void {
-    this.pendingNote.update((m) => ({ ...m, [timeslotId]: note }));
+    this.pendingNote.update((m: Record<number, string>) => ({ ...m, [timeslotId]: note }));
   }
 
   openConfirm(): void {
@@ -185,35 +184,35 @@ export class TeacherDashboardComponent implements OnInit {
     const entries = this.entries();
     const scheduleEntries = this.schedule()?.entries ?? [];
     const toAdd = entries.filter(
-      (e) =>
+      (e: DayEntry) =>
         checks[e.timeslot_id] &&
-        !scheduleEntries.find((x) => x.timeslot_id === e.timeslot_id)?.is_absent,
+        !scheduleEntries.find((x: DayEntry) => x.timeslot_id === e.timeslot_id)?.is_absent,
     );
     const toRemove = entries.filter(
-      (e) =>
+      (e: DayEntry) =>
         !checks[e.timeslot_id] &&
-        scheduleEntries.find((x) => x.timeslot_id === e.timeslot_id)?.absence_id,
+        scheduleEntries.find((x: DayEntry) => x.timeslot_id === e.timeslot_id)?.absence_id,
     );
 
     this.saving.set(true);
-    const postReqs = toAdd.map((e) =>
+    const postReqs = toAdd.map((e: DayEntry) =>
       this.http.post(API + '/absences', {
         teacher_id: teacherId,
         date: dateStr,
-        timeslot_id: e.timeslot_id,
+        timeslot_id: e?.timeslot_id,
         note: notes[e.timeslot_id] || null,
       }),
     );
     const deleteReqs: ReturnType<HttpClient['delete']>[] = [];
     for (const e of toRemove) {
-      const entry = scheduleEntries.find((x) => x.timeslot_id === e.timeslot_id);
+      const entry = scheduleEntries.find((x: DayEntry) => x.timeslot_id === e.timeslot_id);
       if (entry?.absence_id)
         deleteReqs.push(this.http.delete(`${API}/absences/${entry.absence_id}`));
     }
 
     const all = [
-      ...postReqs.map((r) => firstValueFrom(r)),
-      ...deleteReqs.map((r) => firstValueFrom(r)),
+      ...postReqs.map((r: ReturnType<HttpClient['post']>) => firstValueFrom(r)),
+      ...deleteReqs.map((r: ReturnType<HttpClient['delete']>) => firstValueFrom(r)),
     ];
     Promise.all(all)
       .then(() => {
