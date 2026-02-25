@@ -1,6 +1,6 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
 const API = '/api/v1';
@@ -20,7 +20,8 @@ interface UserItem {
   imports: [CommonModule, FormsModule],
   templateUrl: './teachers.html',
 })
-export class TeachersComponent implements OnInit {
+export class TeachersComponent {
+  private http = inject(HttpClient);
   list = signal<UserItem[]>([]);
   loading = signal(false);
   modalOpen = signal(false);
@@ -30,16 +31,14 @@ export class TeachersComponent implements OnInit {
   saving = signal(false);
   error = signal('');
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.load();
   }
 
   load(): void {
     this.loading.set(true);
     this.http.get<{ data: UserItem[] }>(`${API}/users`).subscribe({
-      next: (res) => {
+      next: (res: { data: UserItem[] }) => {
         this.list.set(res.data);
         this.loading.set(false);
       },
@@ -66,7 +65,10 @@ export class TeachersComponent implements OnInit {
   }
 
   setForm(p: Partial<{ username: string; password: string; name: string; role: string }>): void {
-    this.form.update((f) => ({ ...f, ...p }));
+    this.form.update((f: { username: string; password: string; name: string; role: string }) => ({
+      ...f,
+      ...p,
+    }));
   }
 
   save(): void {
@@ -91,7 +93,7 @@ export class TeachersComponent implements OnInit {
         this.close();
         this.load();
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         this.saving.set(false);
         this.error.set(err?.error?.message || err?.message || 'Error al guardar');
       },
@@ -102,7 +104,7 @@ export class TeachersComponent implements OnInit {
     if (!confirm(`¿Eliminar a ${u.name}?`)) return;
     this.http.delete(`${API}/users/${u.id}`).subscribe({
       next: () => this.load(),
-      error: (e) => alert(e?.error?.message || 'Error al eliminar'),
+      error: (e: HttpErrorResponse) => alert(e?.error?.message || 'Error al eliminar'),
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,8 @@ interface Subject {
   imports: [CommonModule, FormsModule],
   templateUrl: './subjects.html',
 })
-export class SubjectsComponent implements OnInit {
+export class SubjectsComponent {
+  private http = inject(HttpClient);
   list = signal<Subject[]>([]);
   centers: { id: number; name: string }[] = [];
   loading = signal(false);
@@ -26,19 +27,17 @@ export class SubjectsComponent implements OnInit {
   form = signal({ center_id: 0, name: '' });
   saving = signal(false);
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.http
       .get<{ id: number; name: string }[]>(`${API}/centers`)
-      .subscribe((c) => (this.centers = c));
+      .subscribe((c: { id: number; name: string }[]) => (this.centers = c));
     this.load();
   }
 
   load(): void {
     this.loading.set(true);
     this.http.get<Subject[]>(`${API}/subjects`).subscribe({
-      next: (res) => {
+      next: (res: Subject[]) => {
         this.list.set(res);
         this.loading.set(false);
       },
@@ -63,7 +62,7 @@ export class SubjectsComponent implements OnInit {
   }
 
   setForm(p: Partial<{ center_id: number; name: string }>): void {
-    this.form.update((f) => ({ ...f, ...p }));
+    this.form.update((f: { center_id: number; name: string }) => ({ ...f, ...p }));
   }
 
   save(): void {
