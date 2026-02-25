@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +18,8 @@ interface TimeSlot {
   imports: [CommonModule, FormsModule],
   templateUrl: './timeslots.html',
 })
-export class TimeslotsComponent implements OnInit {
+export class TimeslotsComponent {
+  private http = inject(HttpClient);
   list = signal<TimeSlot[]>([]);
   centers: { id: number; name: string }[] = [];
   centerId: number | null = null;
@@ -28,19 +29,17 @@ export class TimeslotsComponent implements OnInit {
   form = signal({ center_id: 0, start_time: '08:00', end_time: '09:00' });
   saving = signal(false);
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.http
       .get<{ id: number; name: string }[]>(`${API}/centers`)
-      .subscribe((c) => (this.centers = c));
+      .subscribe((c: { id: number; name: string }[]) => (this.centers = c));
     this.load();
   }
 
   load(): void {
     this.loading.set(true);
     this.http.get<TimeSlot[]>(`${API}/timeslots`).subscribe({
-      next: (res) => {
+      next: (res: TimeSlot[]) => {
         this.list.set(res);
         if (res.length && this.centerId == null) this.centerId = res[0].center_id;
         this.loading.set(false);
@@ -74,7 +73,10 @@ export class TimeslotsComponent implements OnInit {
   }
 
   setForm(p: Partial<{ center_id: number; start_time: string; end_time: string }>): void {
-    this.form.update((f) => ({ ...f, ...p }));
+    this.form.update((f: { center_id: number; start_time: string; end_time: string }) => ({
+      ...f,
+      ...p,
+    }));
   }
 
   save(): void {

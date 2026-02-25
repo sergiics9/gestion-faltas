@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth';
@@ -31,13 +31,21 @@ interface GuardTodayResponse {
         <h1 class="h4 mb-0">Tablero de guardia — {{ date }}</h1>
         <div>
           <span class="me-3">{{ auth.user()?.name }}</span>
-          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="auth.logout()">Salir</button>
+          <button type="button" class="btn btn-outline-secondary btn-sm" (click)="auth.logout()">
+            Salir
+          </button>
         </div>
       </div>
 
       <div class="mb-3">
         <label class="form-label">Ver fecha</label>
-        <input type="date" class="form-control form-control-sm" style="max-width: 180px;" [value]="date" (change)="onDateChange($event)" />
+        <input
+          type="date"
+          class="form-control form-control-sm"
+          style="max-width: 180px;"
+          [value]="date"
+          (change)="onDateChange($event)"
+        />
       </div>
 
       @if (loading()) {
@@ -73,17 +81,14 @@ interface GuardTodayResponse {
     </div>
   `,
 })
-export class GuardDashboardComponent implements OnInit {
+export class GuardDashboardComponent {
+  private http = inject(HttpClient);
+  auth = inject(AuthService);
   date = new Date().toISOString().slice(0, 10);
   absences = signal<AbsenceRow[]>([]);
   loading = signal(false);
 
-  constructor(
-    public auth: AuthService,
-    private http: HttpClient
-  ) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.load();
   }
 
@@ -97,13 +102,15 @@ export class GuardDashboardComponent implements OnInit {
 
   load(): void {
     this.loading.set(true);
-    this.http.get<GuardTodayResponse>(`${API}/guard/today`, { params: { date: this.date } }).subscribe({
-      next: (res) => {
-        this.date = res.date;
-        this.absences.set(res.absences);
-        this.loading.set(false);
-      },
-      error: () => this.loading.set(false),
-    });
+    this.http
+      .get<GuardTodayResponse>(`${API}/guard/today`, { params: { date: this.date } })
+      .subscribe({
+        next: (res: GuardTodayResponse) => {
+          this.date = res.date;
+          this.absences.set(res.absences);
+          this.loading.set(false);
+        },
+        error: () => this.loading.set(false),
+      });
   }
 }
