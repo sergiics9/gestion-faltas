@@ -1,0 +1,93 @@
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="h5 mb-0">Horarios (asignación profesor / aula / asignatura / franja)</h2>
+  <button type="button" class="btn btn-primary" (click)="openCreate()">Nueva entrada</button>
+</div>
+@if (loading()) { <p class="text-muted">Cargando...</p> } @else {
+<table class="table table-bordered table-sm">
+  <thead class="table-light">
+    <tr>
+      <th>Profesor</th>
+      <th>Día</th>
+      <th>Franja</th>
+      <th>Aula</th>
+      <th>Asignatura</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (e of list(); track e.id) {
+    <tr>
+      <td>{{ e.teacher?.name ?? e.teacher_id }}</td>
+      <td>{{ dayLabel(e.day_of_week) }}</td>
+      <td>{{ e.timeslot?.start_time }}–{{ e.timeslot?.end_time }}</td>
+      <td>{{ e.classroom?.name ?? e.classroom_id }}</td>
+      <td>{{ e.subject?.name ?? e.subject_id }}</td>
+      <td>
+        <button type="button" class="btn btn-sm btn-outline-primary me-1" (click)="openEdit(e)">Editar</button>
+        <button type="button" class="btn btn-sm btn-outline-danger" (click)="delete(e)">Eliminar</button>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+}
+@if (modalOpen()) {
+<div class="modal show d-block" style="background: rgba(0,0,0,0.5);">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ editId() ? 'Editar entrada' : 'Nueva entrada de horario' }}</h5>
+        <button type="button" class="btn-close" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        @if (errorMessage()) {
+        <div class="alert alert-danger d-flex align-items-start gap-2 mb-3 py-3 px-3 border-2 border-danger">
+          <i class="bi bi-exclamation-octagon-fill fs-4 flex-shrink-0" aria-hidden="true"></i>
+          <div>
+            <strong class="d-block mb-1">No se pudo guardar</strong>
+            <span class="text-danger-emphasis">{{ errorMessage() }}</span>
+          </div>
+        </div>
+        }
+        <div class="mb-2">
+          <label class="form-label">Profesor</label>
+          <select class="form-select" [ngModel]="form().teacher_id" (ngModelChange)="setForm({ teacher_id: $event })">
+            @for (t of teachers; track t.id) { <option [value]="t.id">{{ t.name }}</option> }
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Día</label>
+          <select class="form-select" [ngModel]="form().day_of_week" (ngModelChange)="setForm({ day_of_week: $event })">
+            @for (d of days; track d.v) { <option [value]="d.v">{{ d.label }}</option> }
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Franja horaria</label>
+          <select class="form-select" [ngModel]="form().timeslot_id" (ngModelChange)="setForm({ timeslot_id: $event })">
+            @for (t of timeslots; track t.id) {
+            <option [value]="t.id">{{ t.start_time }} – {{ t.end_time }}</option>
+            }
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Aula</label>
+          <select class="form-select" [ngModel]="form().classroom_id"
+            (ngModelChange)="setForm({ classroom_id: $event })">
+            @for (c of classrooms; track c.id) { <option [value]="c.id">{{ c.name }}</option> }
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="form-label">Asignatura</label>
+          <select class="form-select" [ngModel]="form().subject_id" (ngModelChange)="setForm({ subject_id: $event })">
+            @for (s of subjects; track s.id) { <option [value]="s.id">{{ s.name }}</option> }
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="save()" [disabled]="saving()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+}
