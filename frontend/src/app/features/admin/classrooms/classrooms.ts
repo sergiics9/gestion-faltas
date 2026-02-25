@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -17,7 +17,8 @@ interface Classroom {
   imports: [CommonModule, FormsModule],
   templateUrl: './classrooms.html',
 })
-export class ClassroomsComponent implements OnInit {
+export class ClassroomsComponent {
+  private http = inject(HttpClient);
   list = signal<Classroom[]>([]);
   centers: { id: number; name: string }[] = [];
   loading = signal(false);
@@ -26,9 +27,7 @@ export class ClassroomsComponent implements OnInit {
   form = signal({ center_id: 0, name: '' });
   saving = signal(false);
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.http
       .get<{ id: number; name: string }[]>(`${API}/centers`)
       .subscribe((c) => (this.centers = c));

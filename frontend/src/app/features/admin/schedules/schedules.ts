@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,8 @@ interface ScheduleEntry {
   imports: [CommonModule, FormsModule],
   templateUrl: './schedules.html',
 })
-export class SchedulesComponent implements OnInit {
+export class SchedulesComponent {
+  private http = inject(HttpClient);
   list = signal<ScheduleEntry[]>([]);
   teachers: { id: number; name: string }[] = [];
   timeslots: { id: number; start_time: string; end_time: string }[] = [];
@@ -44,28 +45,28 @@ export class SchedulesComponent implements OnInit {
   ];
   saving = signal(false);
 
-  constructor(private http: HttpClient) {}
-
-  ngOnInit(): void {
+  constructor() {
     this.http
       .get<{ data: { id: number; name: string }[] }>(`${API}/users?role=teacher`)
-      .subscribe((r) => (this.teachers = r.data));
+      .subscribe((r: { data: { id: number; name: string }[] }) => (this.teachers = r.data));
     this.http
       .get<{ id: number; start_time: string; end_time: string }[]>(`${API}/timeslots`)
-      .subscribe((t) => (this.timeslots = t));
+      .subscribe(
+        (t: { id: number; start_time: string; end_time: string }[]) => (this.timeslots = t),
+      );
     this.http
       .get<{ id: number; name: string }[]>(`${API}/classrooms`)
-      .subscribe((c) => (this.classrooms = c));
+      .subscribe((c: { id: number; name: string }[]) => (this.classrooms = c));
     this.http
       .get<{ id: number; name: string }[]>(`${API}/subjects`)
-      .subscribe((s) => (this.subjects = s));
+      .subscribe((s: { id: number; name: string }[]) => (this.subjects = s));
     this.load();
   }
 
   load(): void {
     this.loading.set(true);
     this.http.get<ScheduleEntry[]>(`${API}/schedule-entries`).subscribe({
-      next: (res) => {
+      next: (res: ScheduleEntry[]) => {
         this.list.set(res);
         this.loading.set(false);
       },
@@ -112,7 +113,15 @@ export class SchedulesComponent implements OnInit {
       subject_id: number;
     }>,
   ): void {
-    this.form.update((f) => ({ ...f, ...p }));
+    this.form.update(
+      (f: {
+        teacher_id: number;
+        day_of_week: number;
+        timeslot_id: number;
+        classroom_id: number;
+        subject_id: number;
+      }) => ({ ...f, ...p }),
+    );
   }
 
   private friendlySaveError(err: HttpErrorResponse): string {
