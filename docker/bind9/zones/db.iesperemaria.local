@@ -1,0 +1,11 @@
+$TTL    86400
+@       IN      SOA     ns.iesperemaria.local. admin.iesperemaria.local. (
+                      1
+                      604800
+                      86400
+                      2419200
+                      86400 )
+
+@       IN      NS      ns.iesperemaria.local.
+ns      IN      A       127.0.0.1
+gestion IN      A       127.0.0.1
